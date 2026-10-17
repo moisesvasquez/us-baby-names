@@ -1,0 +1,25 @@
+{
+  "name": "us-baby-names",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dashboard and free REST API for 146 years of US baby names (SSA data, 1880–2025).",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm run dev --prefix web",
+    "build": "npm run build --prefix web",
+    "typecheck": "tsc -p tsconfig.json && npm run build --prefix web",
+    "data": "python scripts/build_data.py",
+    "db:load": "python scripts/load_db.py"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "typescript": "~6.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
