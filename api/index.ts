@@ -18,3 +18,7 @@ export const GET = handler(async (url) => {
     source: 'https://www.ssa.gov/oact/babynames/limits.html',
   })
 })
+
+// Vercel routes only exported methods: serve HEAD and CORS preflight with the same handler.
+export const HEAD = GET
+export const OPTIONS = GET

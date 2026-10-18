@@ -44,3 +44,7 @@ function peakOf(s: { year: number; count: number }[]) {
   const p = s.reduce((a, b) => (b.count > a.count ? b : a))
   return { year: p.year, count: p.count }
 }
+
+// Vercel routes only exported methods: serve HEAD and CORS preflight with the same handler.
+export const HEAD = GET
+export const OPTIONS = GET

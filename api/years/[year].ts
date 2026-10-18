@@ -28,3 +28,7 @@ export const GET = handler(async (url) => {
   const female = pick('F'), male = pick('M')
   return json({ year, births: female.births + male.births, female, male })
 })
+
+// Vercel routes only exported methods: serve HEAD and CORS preflight with the same handler.
+export const HEAD = GET
+export const OPTIONS = GET
