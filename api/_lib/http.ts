@@ -33,7 +33,7 @@ export function error(status: number, code: string, message: string): Response {
 export function handler(fn: (url: URL, req: Request) => Promise<Response>) {
   return async (req: Request): Promise<Response> => {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers })
-    if (req.method !== 'GET') return error(405, 'method_not_allowed', 'Only GET is supported.')
+    if (req.method !== 'GET' && req.method !== 'HEAD') return error(405, 'method_not_allowed', 'Only GET is supported.')
     try {
       return await fn(new URL(req.url), req)
     } catch (e) {
