@@ -2,12 +2,12 @@
 
 **146 years of American baby names (1880–2025), as an interactive dashboard and a free REST API.**
 
-- **Dashboard:** https://us-baby-names.vercel.app
-- **API docs:** [docs/API.md](docs/API.md) · [OpenAPI spec](https://us-baby-names.vercel.app/openapi.json)
+- **Dashboard:** https://names.moisesvasquez.io
+- **API docs:** [docs/API.md](docs/API.md) · [OpenAPI spec](https://names.moisesvasquez.io/openapi.json)
 - **Data:** US Social Security Administration, every name given to at least 5 babies of one sex in a year: 105,966 names, about 375 million babies.
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/names/Olivia?sex=F"
+curl "https://names.moisesvasquez.io/api/names/Olivia?sex=F"
 ```
 
 ---

@@ -77,7 +77,13 @@ export default function App() {
           in a year are not published. Ranks are among all names of the same sex that year (or both sexes combined). Average age is an estimate:
           births adjusted with an approximate US life table, ignoring migration.
         </p>
+        <div className="footer-bottom">
+        <p className="note credit">
+          Made with <span role="img" aria-label="love">❤️</span> by{' '}
+          <a href="https://moisesvasquez.io" target="_blank" rel="noreferrer">Moises Vasquez</a>.
+        </p>
         <p className="note">Open source on <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a> · <a href="#api" onClick={(e) => { e.preventDefault(); go('api') }}>Free API</a></p>
+        </div>
       </footer>
     </div>
   )

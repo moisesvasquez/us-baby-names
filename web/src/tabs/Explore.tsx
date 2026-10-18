@@ -10,6 +10,7 @@ import { TrendChart, type Metric } from '../components/TrendChart'
 import { MetricToggle } from '../components/MetricToggle'
 import { brushProps, RangeLabel, useRange } from '../components/range'
 import { useMobile } from '../lib/useMobile'
+import { ShareButton } from '../components/ShareButton'
 
 interface Props { name: string; sex: Sex; onChange: (name: string, sex: Sex) => void }
 
@@ -68,6 +69,10 @@ export function Explore({ name, sex, onChange }: Props) {
         <>
           <div className="name-hero">
             <h2>{name}</h2>
+            <ShareButton
+              url={`${window.location.origin}${window.location.pathname}#explore?${new URLSearchParams({ name, sex })}`}
+              label={`Copy link to ${name}`}
+            />
             <span>
               {fmt(summary.total)} {sexLabel[sex]} since {summary.firstYear}
               {sex === 'B' && girlShare != null && ` · ${Math.round(girlShare * 100)}% girls`}

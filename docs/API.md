@@ -2,15 +2,15 @@
 
 Free, read-only JSON API for US baby name data from the Social Security Administration, **1880–2025**.
 
-- **Base URL:** `https://us-baby-names.vercel.app/api`
+- **Base URL:** `https://names.moisesvasquez.io/api`
 - **Auth:** none. No key, no sign-up.
 - **CORS:** enabled for all origins, so you can call it straight from a browser.
 - **Methods:** `GET` only.
 - **Format:** JSON (UTF-8).
-- **Machine-readable spec:** [`/openapi.json`](https://us-baby-names.vercel.app/openapi.json) (OpenAPI 3.1)
+- **Machine-readable spec:** [`/openapi.json`](https://names.moisesvasquez.io/openapi.json) (OpenAPI 3.1)
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/names/Olivia?sex=F"
+curl "https://names.moisesvasquez.io/api/names/Olivia?sex=F"
 ```
 
 ## Contents
@@ -54,7 +54,7 @@ Yearly series and summary statistics for one name.
 **Request**
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/names/Mary?sex=F&from=2022"
+curl "https://names.moisesvasquez.io/api/names/Mary?sex=F&from=2022"
 ```
 
 **Response** (abridged)
@@ -104,7 +104,7 @@ The most popular names for one sex in one year.
 | `offset` | no | Skip this many rows, for paging (default 0) |
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/top?year=1950&sex=M&limit=3"
+curl "https://names.moisesvasquez.io/api/top?year=1950&sex=M&limit=3"
 ```
 
 ```json
@@ -138,7 +138,7 @@ Names that start with a prefix, most popular first.
 | `limit` | no | 1–50 (default 10) |
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/search?q=bar&limit=3"
+curl "https://names.moisesvasquez.io/api/search?q=bar&limit=3"
 ```
 
 ```json
@@ -165,7 +165,7 @@ Up to four names in one call.
 | `sex` | no | `F`, `M` or `all` (default) |
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/compare?names=Linda,Olivia&sex=F"
+curl "https://names.moisesvasquez.io/api/compare?names=Linda,Olivia&sex=F"
 ```
 
 ```json
@@ -202,7 +202,7 @@ Totals and the top names for girls and boys in one year.
 | `limit` | query | no | Top names per sex, 1–25 (default 5) |
 
 ```bash
-curl "https://us-baby-names.vercel.app/api/years/1957?limit=2"
+curl "https://names.moisesvasquez.io/api/years/1957?limit=2"
 ```
 
 ```json
@@ -264,7 +264,7 @@ There is no hard rate limit today. That may change if the service gets abused.
 **JavaScript (browser or Node 18+)**
 
 ```js
-const res = await fetch('https://us-baby-names.vercel.app/api/names/Ariel?sex=F&from=1985&to=1995')
+const res = await fetch('https://names.moisesvasquez.io/api/names/Ariel?sex=F&from=1985&to=1995')
 const data = await res.json()
 console.table(data.years) // the Little Mermaid spike in 1990–91
 ```
@@ -274,7 +274,7 @@ console.table(data.years) // the Little Mermaid spike in 1990–91
 ```python
 import requests
 
-r = requests.get("https://us-baby-names.vercel.app/api/top", params={"year": 2025, "sex": "M", "limit": 5})
+r = requests.get("https://names.moisesvasquez.io/api/top", params={"year": 2025, "sex": "M", "limit": 5})
 for row in r.json()["names"]:
     print(row["rank"], row["name"], row["count"])
 ```
@@ -284,7 +284,7 @@ for row in r.json()["names"]:
 ```python
 import pandas as pd, requests
 
-data = requests.get("https://us-baby-names.vercel.app/api/compare",
+data = requests.get("https://names.moisesvasquez.io/api/compare",
                     params={"names": "Linda,Jennifer,Olivia", "sex": "F"}).json()
 df = pd.concat(pd.DataFrame(n["years"]).assign(name=n["name"]) for n in data["names"] if n["found"])
 df.pivot(index="year", columns="name", values="count").plot()
