@@ -46,6 +46,20 @@ const ENDPOINTS: Endpoint[] = [
     desc: 'Total babies, distinct names, and the top names for girls and boys in a single year.',
     params: [{ name: 'limit', desc: 'Top names per sex, up to 25 (default 5)' }],
   },
+  {
+    path: '/api/unique', title: 'Unique names', example: '/api/unique?sex=F&starts=el&ends=a&maxLen=6&min=20&max=200&years=10',
+    desc: 'Uncommon names filtered by gender, letters and rarity ("given to min–max babies in the last N years"). Powers the Unique names page.',
+    params: [
+      { name: 'sex', desc: 'F, M, unisex (30–70% girls) or all (default)' },
+      { name: 'years', desc: 'Window: 1, 3, 5, 10, 20, 50 or all (default 5)' },
+      { name: 'min, max', desc: 'Babies in the window (default 5–100)' },
+      { name: 'starts, ends, contains', desc: 'Letters, case-insensitive' },
+      { name: 'minLen, maxLen', desc: 'Number of letters, 1–15' },
+      { name: 'trend', desc: 'any, rising, steady, falling or new' },
+      { name: 'vintage', desc: 'true = once had 1,000+ babies in a year' },
+      { name: 'sort', desc: 'rare (default), common, rising, az, za, random (+ seed)' },
+    ],
+  },
 ]
 
 export function ApiDocs() {

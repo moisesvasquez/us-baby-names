@@ -4,11 +4,14 @@ Usage:
     pip install "psycopg[binary]"
     DATABASE_URL=postgres://... python scripts/load_db.py      (or put DATABASE_URL in .env)
 
-Recreates the tables in db/schema.sql and bulk-loads data/raw/yob*.txt with COPY.
+Recreates the tables in db/schema.sql, bulk-loads data/raw/yob*.txt with COPY, then
+builds the precomputed tables in db/windows.sql (used by /api/unique).
+Pass --windows-only to rebuild just db/windows.sql on an existing database.
 """
 import glob
 import os
 import re
+import sys
 from collections import defaultdict
 
 import psycopg
@@ -47,6 +50,12 @@ def read_rows():
 
 
 def main():
+    if "--windows-only" in sys.argv:
+        with psycopg.connect(database_url()) as conn:
+            conn.execute(open(os.path.join(ROOT, "db", "windows.sql"), encoding="utf-8").read())
+            conn.commit()
+        print("name_windows built")
+        return
     rows = list(read_rows())
     print(f"{len(rows):,} rows read")
 
@@ -77,6 +86,8 @@ def main():
                 for (year, sex), (births, uniq) in sorted(year_tot.items()):
                     cp.write_row((year, sex, births, uniq))
             cur.execute("ANALYZE")
+            cur.execute(open(os.path.join(ROOT, "db", "windows.sql"), encoding="utf-8").read())
+            print("name_windows built")
         conn.commit()
     print("Done")
 

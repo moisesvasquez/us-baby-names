@@ -21,6 +21,7 @@ Built mobile-first. Every main chart has a draggable slider under the x-axis for
 | **Look up a name** | Search any name and filter by female, male or both. You get total babies, peak year, best-ever rank (among all names that year), latest count and rank, a 5-year trend, and the **estimated average age** of people with the name today. Below that: a chart you can switch between babies, per-million births and rank, plus an age profile of living people with the name. |
 | **Compare names** | Up to four names on one chart, with peak years marked, a side-by-side table (or cards on phones), trend badges and average ages. Includes ready-made sets like *Girls through the eras* and *The -ayden wave*, and a Clear all button. |
 | **Last 5 years** | Rank changes in the top 10 for girls and boys, the fastest risers and fallers, names that appeared out of nowhere, gender-neutral names, and the shrinking share of babies with a top-100 name. |
+| **Unique names** ([/unique-names](https://names.moisesvasquez.io/unique-names)) | A finder for uncommon names. Filter by gender (including unisex), starts with, ends with, contains, number of letters, and "given to X–Y babies in the last N years". Extra filters for rising, falling or brand-new names and forgotten classics. Each result expands into a histogram of that name over the chosen years. Save favorites to a shortlist and compare them. Every filter lives in the URL, so searches can be shared. |
 | **Stories in the data** | Names shaped by history: *The Little Mermaid* and Ariel, Shirley Temple, Hurricane Katrina, Amazon's Alexa, Messi and Lionel, and more. Plus the biggest one-year surges, found automatically, and births over time. |
 | **API** | Endpoint reference with live "Try it" buttons. |
 
@@ -35,6 +36,7 @@ Free, no key, CORS enabled, `GET` only.
 | `GET /api/search?q=ari&limit=10` | Prefix search, most popular first |
 | `GET /api/compare?names=Linda,Olivia&sex=F` | Up to four names side by side |
 | `GET /api/years/{year}?limit=5` | Births, distinct names and top names for one year |
+| `GET /api/unique?sex=F&years=5&max=100&starts=el` | Uncommon names, filtered by gender, letters, length, rarity window and trend |
 
 Full reference with request/response examples, error codes and code samples: **[docs/API.md](docs/API.md)**.
 How ranks, trends and estimated ages are calculated: **[docs/DATA.md](docs/DATA.md)**.
@@ -55,7 +57,9 @@ How ranks, trends and estimated ages are calculated: **[docs/DATA.md](docs/DATA.
 ├── data/
 │   ├── raw/              SSA yob1880.txt … yob2025.txt
 │   └── stories.json      curated stories for the Stories tab
-├── db/schema.sql         Postgres schema
+├── db/
+│   ├── schema.sql        Postgres schema
+│   └── windows.sql       precomputed totals for /api/unique
 ├── docs/                 API.md, DATA.md
 ├── scripts/
 │   ├── build_data.py     raw → web/public/data/*.json

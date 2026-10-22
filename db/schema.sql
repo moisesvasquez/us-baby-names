@@ -1,6 +1,7 @@
 -- US Baby Names API schema (Neon Postgres)
 -- Source: SSA national baby names, yob1880.txt .. yob2025.txt
 
+DROP TABLE IF EXISTS name_windows;
 DROP TABLE IF EXISTS name_years;
 DROP TABLE IF EXISTS names;
 DROP TABLE IF EXISTS year_totals;

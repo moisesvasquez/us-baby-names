@@ -46,6 +46,14 @@ The "Stories in the data" tab has two parts:
 - **Curated stories** ([`data/stories.json`](../data/stories.json)): names with a well-known cultural trigger. Every number quoted in a story was checked against the data.
 - **Biggest one-year surges**: found automatically. A name qualifies when one year's count is at least 6× the average of the previous three years, with at least 400 babies. `Christop` (a truncated record in SSA's 1989 file) is excluded.
 
+## Unique names finder
+
+`/api/unique` reads a precomputed table, `name_windows` ([`db/windows.sql`](../db/windows.sql)). For each window (last 1, 3, 5, 10, 20, 50 years, or all years) and each name used in it, the table holds the female and male totals, the totals in the newer half of the window, and how many years the name appeared. That keeps every filter combination fast (about 0.1–0.4 s) instead of scanning 2 million rows per request.
+
+- **Unisex:** girls make up 30–70% of the name's babies within the window.
+- **Trend:** babies per year in the newer half of the window vs the older half. More than +25% is rising, below −20% is falling. The dashboard hides the trend badge for names under 25 babies, where it's mostly noise.
+- **Forgotten classics:** the name's best single year ever had 1,000+ babies of that sex.
+
 ## Rebuilding
 
 ```bash

@@ -21,6 +21,7 @@ curl "https://names.moisesvasquez.io/api/names/Olivia?sex=F"
 - [GET /api/search](#get-apisearch): prefix search / autocomplete
 - [GET /api/compare](#get-apicompare): up to four names side by side
 - [GET /api/years/{year}](#get-apiyearsyear): totals and top names for one year
+- [GET /api/unique](#get-apiunique): find uncommon names with filters
 - [Errors](#errors)
 - [Caching and fair use](#caching-and-fair-use)
 - [Examples in code](#examples-in-code)
@@ -224,6 +225,64 @@ curl "https://names.moisesvasquez.io/api/years/1957?limit=2"
 
 ---
 
+## GET /api/unique
+
+Find uncommon names. This powers the [Unique Name Finder](https://names.moisesvasquez.io/unique-names).
+
+Counts are summed over a **window** of recent years, and you choose how many babies a name may have had in that window.
+
+| Param | Required | Description |
+|---|---|---|
+| `sex` | no | `F`, `M`, `unisex` (30–70% girls within the window) or `all` (default) |
+| `years` | no | Window: `1`, `3`, `5`, `10`, `20`, `50` or `all` (since 1880). Default `5` |
+| `min`, `max` | no | Babies with the name in the window. Defaults `5` and `100` |
+| `minLen`, `maxLen` | no | Number of letters, 1–15 |
+| `starts`, `ends`, `contains` | no | Letters, case-insensitive |
+| `trend` | no | `any` (default), `rising`, `steady`, `falling` or `new` (first recorded inside the window). Rising/steady/falling compare the yearly rate in the newer half of the window with the older half and need `years` ≥ 3 |
+| `vintage` | no | `true` to keep only names that once had 1,000+ babies in a single year ("forgotten classics") |
+| `sort` | no | `rare` (default), `common`, `rising`, `az`, `za` or `random` |
+| `seed` | no | With `sort=random`: same seed, same order, so paging stays stable |
+| `limit`, `offset` | no | Page size up to 100 (default 50) and starting offset |
+
+```bash
+curl "https://names.moisesvasquez.io/api/unique?sex=F&starts=el&ends=a&maxLen=6&min=20&max=200&years=10&sort=rare&limit=2"
+```
+
+```json
+{
+  "filters": {
+    "sex": "F", "years": 10, "from": 2016, "to": 2025, "min": 20, "max": 200,
+    "minLen": 1, "maxLen": 6, "starts": "el", "ends": "a", "contains": null,
+    "trend": "any", "vintage": false, "sort": "rare"
+  },
+  "matches": 55,
+  "limit": 2,
+  "offset": 0,
+  "names": [
+    {
+      "name": "Eloiza", "count": 21, "female": 21, "male": 0, "yearsUsed": 4,
+      "firstYear": 1921, "peakYearCount": 6, "trend": "rising", "changePct": 150
+    },
+    {
+      "name": "Elodia", "count": 22, "female": 22, "male": 0, "yearsUsed": 3,
+      "firstYear": 1893, "peakYearCount": 48, "trend": "falling", "changePct": -30.8
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `count` | Babies in the window, for the chosen `sex` (`female` + `male` for `all`/`unisex`) |
+| `yearsUsed` | Years in the window where the name reached 5+ babies of one sex |
+| `firstYear` | First year the name appears in the data at all |
+| `peakYearCount` | Most babies the name ever had in a single year (any year since 1880) |
+| `trend`, `changePct` | Newer half of the window vs older half, as a % change in babies per year. `null` for 1-year windows and new names |
+
+To draw the history of a result inside the same window, call [`/api/names/{name}?sex=…&from=…&to=…`](#get-apinamesname) with the `from`/`to` returned in `filters`.
+
+---
+
 ## Errors
 
 Errors use standard HTTP status codes and a JSON body:
@@ -245,6 +304,7 @@ Errors use standard HTTP status codes and a JSON body:
 | 400 | `invalid_year`, `invalid_from`, `invalid_to`, `invalid_range` | Year outside 1880–2025, or `from` > `to` |
 | 400 | `invalid_limit`, `invalid_offset` | Out of range |
 | 400 | `invalid_names`, `too_many_names` | Missing names, or more than 4 in `/compare` |
+| 400 | `invalid_years`, `invalid_length`, `invalid_starts`, `invalid_ends`, `invalid_contains`, `invalid_trend`, `invalid_sort` | Bad `/unique` filter |
 | 404 | `name_not_found` | Name (or name + sex) not in the data |
 | 404 | `not_found` | Unknown endpoint |
 | 405 | `method_not_allowed` | Anything other than `GET` / `OPTIONS` |

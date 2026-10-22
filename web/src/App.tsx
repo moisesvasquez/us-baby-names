@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { loadMeta, type Meta, type Sex } from './lib/data'
 import { compact, fmt } from './lib/format'
 import { useHash } from './lib/useHash'
@@ -7,11 +7,13 @@ import { Compare, MAX_COMPARE } from './tabs/Compare'
 import { Recent } from './tabs/Recent'
 import { Stories } from './tabs/Stories'
 import { ApiDocs, REPO_URL } from './tabs/ApiDocs'
+import { UniqueNames } from './tabs/UniqueNames'
 
 const TABS = [
   { id: 'explore', label: 'Look up' },
   { id: 'compare', label: 'Compare' },
   { id: 'recent', label: 'Last 5 years' },
+  { id: 'unique', label: 'Unique names' },
   { id: 'stories', label: 'Stories' },
   { id: 'api', label: 'API' },
 ]
@@ -33,6 +35,11 @@ export default function App() {
   const isDark = theme ? theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
   const active = TABS.some((t) => t.id === tab) ? tab : 'explore'
   const pick = (name: string, sex: Sex) => { go('explore', { name, sex }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+
+  const onUniqueChange = useCallback((p: Record<string, string>) => go('unique', p, true), [go])
+  useEffect(() => {
+    document.title = active === 'unique' ? 'Unique Name Finder · US Baby Names' : 'US Baby Names'
+  }, [active])
 
   const totalBabies = meta ? meta.births.F.reduce((a, b) => a + b, 0) + meta.births.M.reduce((a, b) => a + b, 0) : 0
 
@@ -67,6 +74,10 @@ export default function App() {
             onChange={(names, sex) => go('compare', names.length ? { names: names.join(','), sex } : { sex }, true)} />
         )}
         {active === 'recent' && <Recent onPick={pick} />}
+        {active === 'unique' && (
+          <UniqueNames params={params} onChange={onUniqueChange} onExplore={pick}
+            onCompare={(names) => { go('compare', { names: names.join(','), sex: 'B' }); window.scrollTo({ top: 0 }) }} />
+        )}
         {active === 'stories' && <Stories onPick={pick} />}
         {active === 'api' && <ApiDocs />}
       </main>

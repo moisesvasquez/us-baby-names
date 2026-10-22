@@ -14,6 +14,7 @@ export const GET = handler(async (url) => {
       search: `${base}/search?q=ma&sex=all&limit=10`,
       compare: `${base}/compare?names=Emma,Olivia&sex=F`,
       year: `${base}/years/{year}?limit=5`,
+      unique: `${base}/unique?sex=F&years=5&min=5&max=100&starts=el`,
     },
     source: 'https://www.ssa.gov/oact/babynames/limits.html',
   })
